@@ -157,5 +157,7 @@ def main():
         for k in k_values:
             print(f"{'p = ' + str(p):<7} {'k = ' + str(k):<7} {average_empirical_errors[k][p]:^25.6f} {average_true_errors[k][p]:<15.6f} {average_error_differences[k][p]:<15.6f}")
         print()
+
+
 if __name__ == "__main__":
     main()
