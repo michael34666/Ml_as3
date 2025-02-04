@@ -51,6 +51,7 @@
 
 import numpy as np
 from sklearn.model_selection import train_test_split
+from typing import Tuple
 
 # Function to calculate distance
 
@@ -83,18 +84,18 @@ def k_nn(train_data, train_labels, test_data, k, p) -> np.array:
 
 
 # Function to prepare data
-def prepare_data(file_path) -> (np.array, np.array):
+def prepare_data(file_path) -> Tuple[np.array, np.array]:
     data = []
     labels = []
     with open(file_path, 'r') as file:
         for line in file:
             parts = line.strip().split()
-            if len(parts) >= 5:  # Ensure there are enough parts in the line
-                if parts[4] in ['Iris-versicolor', 'Iris-virginica']:
-                    data.append([float(parts[1]), float(parts[2])])  # Using the second and third features
-                    labels.append(1 if parts[4] == 'Iris-virginica' else 0)
-            else:
-                print(f"Skipping invalid line: {line}")
+            if parts[4] == "Iris-versicolor":
+                data.append([float(parts[1]), float(parts[2])])
+                labels.append(0)
+            elif parts[4] == "Iris-virginica":
+                data.append([float(parts[1]), float(parts[2])])
+                labels.append(1)
     return np.array(data), np.array(labels)
 
 
@@ -107,10 +108,6 @@ def accuracy(predictions, true_labels) -> float:
 def main():
     # Prepare data
     data, labels = prepare_data('iris.txt')
-
-    # Check if there is any valid data
-    if data.shape[0] == 0:
-        raise ValueError("No valid data found after processing the input file.")
 
     # Repeat the experiment 100 times to compute average errors
     k_values = [1, 3, 5, 7, 9]
@@ -140,7 +137,7 @@ def main():
                 true_errors[k][p].append(true_error)
 
                 # Calculate and store the difference between empirical and true errors
-                error_difference = true_error-empirical_error
+                error_difference = true_error - empirical_error
                 error_differences[k][p].append(error_difference)
 
     # Compute averages and differences
@@ -155,14 +152,10 @@ def main():
     }
 
     # Output the results
-    for k in k_values:
-        for p in p_values:
-            print(f" p = {p} , k = {k}: Empirical Error = {average_empirical_errors[k][p]:.4f}"
-                  f"  True Error = {average_true_errors[k][p]:.4f}"
-                  f"  Error Difference = {average_error_differences[k][p]:.4f}")
-
-
-
+    print(f"{'round':^15} {'Average Empirical Errors':^25} {'Average True Errors':^15} {'Error Differences':^15}")
+    for p in p_values:
+        for k in k_values:
+            print(f"{'p = ' + str(p):<7} {'k = ' + str(k):<7} {average_empirical_errors[k][p]:^25.6f} {average_true_errors[k][p]:<15.6f} {average_error_differences[k][p]:<15.6f}")
+        print()
 if __name__ == "__main__":
     main()
-
