@@ -3,6 +3,9 @@
 \usepackage{float}
 \usepackage{fvextra} 
 \usepackage{datetime}
+\usepackage{graphicx}
+
+
 \title{Mechine Learning - Assignment 3}
 \author{Michael Dadush \\ 206917908 \and Shay Gali \\ 315202242}
 \date{\monthname[\month] \ \the\year}
@@ -96,4 +99,66 @@ k = 9 with p = 2 gives best results because:
 \subsection{Conclusion}
 Our analysis shows that k = 9 and p = 2 give best performance for this classification task. These parameters help balance between learning from data and not overfitting. The results also show importance of choosing right k value to avoid overfitting, especially avoiding k = 1 which memorizes training data too much.
 
+\section{Decision Tree Classifier}
+
+We tested two ways to build decision trees: brute-force and binary entropy. Both methods were limited to 3 levels (k=3). We used the Iris dataset and focused on separating Iris-versicolor (marked as 0) from Iris-virginica (marked as 1).
+
+\subsection{Results}
+
+Our accuracy results were:
+\begin{itemize}
+    \item Brute force method: 95\%
+    \item Binary entropy method: 93\%
+\end{itemize}
+
+\subsection{The Trees We Got}
+
+You can see both trees in Figures \ref{fig:brute_force_tree} and \ref{fig:entropy_tree}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/brute_force_tree.png}
+    \caption{The tree from brute force method}
+    \label{fig:brute_force_tree}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/entropy_tree.png}
+    \caption{The tree from entropy method}
+    \label{fig:entropy_tree}
+\end{figure}
+
+\subsubsection{Analyze the results}
+
+Let's look at what each method did:
+
+\paragraph{Brute Force Method}
+\begin{itemize}
+    \item Got better accuracy (95\%)
+    \item Used all 3 levels we allowed - need both features to make the decision (the VC dimension is 2)
+    \item Made these splits:
+        \begin{itemize}
+            \item First split: X[0] $\leq$ 3.00
+            \item Left side: X[1] $\leq$ 4.70
+            \item Right side: X[1] $\leq$ 5.00
+        \end{itemize}
+\end{itemize}
+
+\paragraph{Binary Entropy Method}
+\begin{itemize}
+    \item Got 93\% accuracy
+    \item Used just two level even though it could use three - we need only one feature to make the decision
+    \item Made one split: X[1] $\leq$ 4.70
+\end{itemize}
+
+\paragraph{Comparing the Methods}
+The entropy method made a much simpler tree and still worked almost as well (only 2\% worse). This tells us:
+\begin{itemize}
+    \item The simpler tree might work better on new data
+    \item X[1] is probably the more important feature
+    \item The brute force tree might be too complex for what we need
+\end{itemize}
+
+\noindent For real use, we think the entropy method is better because it's simpler and faster, even though it got slightly lower accuracy. The brute force method might be trying too hard to fit our specific data.
 \end{document}
